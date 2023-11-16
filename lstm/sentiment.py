@@ -181,10 +181,12 @@ For financial headlines, where domain-specific language and nuances are prevalen
     return   vader_sentiments,    textblob_sentiments , \
             transformers_sentiments,  flair_sentiments 
 
-def main():
+def run(name,lines=-1, verbose=False):
     #  use it 
-    lines = get_headlines('FTNT', 5) # or fortinet 
-    print('\n'.join(lines))
+    # lines = get_headlines('FTNT', 5) # or fortinet 
+    lines = get_headlines(company=name,lines=lines)
+    if verbose:
+        print('\n'.join(lines))
 
     # monitor the time spent
     print('\n\n......Starting sentiment_analysis',time.ctime(time.time()))
@@ -205,5 +207,14 @@ def main():
     for a in [a1,a2,a3,a4]:
         calculate_average(a)
 
+import argparse
+
+
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Sentiment of stock')
+    parser.add_argument('name', type=str, help='Specify the company name or stock symbol')
+    parser.add_argument('-n','--lines', type=int, default=-1,required=False, help='Specify the number of headlines. Use -1 for all headlines.')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose mode.')
+    args = parser.parse_args()
+
+    run(name=args.name, lines=args.lines, verbose=args.verbose)
